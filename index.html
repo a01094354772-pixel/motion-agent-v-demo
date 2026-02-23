@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motion Agent-V | 보안 체인 통합 관제 플랫폼</title>
+    <title>모션 에이전트 브이 | AI 통합 관제 및 보안 체인 v9.1</title>
+    <!-- 외부 라이브러리 로드 -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -19,43 +20,154 @@
             background-color: #050505; 
             color: #e2e8f0; 
             margin: 0; 
+            padding: 0;
             overflow-x: hidden; 
         }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        /* 스크롤바 디자인 */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #deff9a; }
         
-        .neon-border { 
-            border: 1px solid rgba(222, 255, 154, 0.2); 
-            box-shadow: 0 0 20px rgba(222, 255, 154, 0.05); 
+        /* 레이아웃 안정화 */
+        .app-wrapper {
+            min-height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card { 
+            background: #0f0f0f; 
+            border-radius: 24px; 
+            padding: 25px; 
+            border: 1px solid #222; 
+            position: relative; 
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
         
-        .card { background: #0f0f0f; border-radius: 24px; padding: 30px; border: 1px solid #222; position: relative; }
-        .btn-primary { background: #deff9a; color: #000; border: none; padding: 15px 40px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 16px; transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-primary { 
+            background: #deff9a; 
+            color: #000; 
+            border: none; 
+            padding: 15px 30px; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            font-size: 15px; 
+            transition: 0.2s; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 10px; 
+        }
         .btn-primary:hover { transform: scale(1.02); background: #eaffbd; }
         .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
 
+        .btn-reset {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-reset:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* AI 특화 UI */
+        .ai-badge {
+            background: linear-gradient(90deg, #deff9a, #3b82f6);
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
         /* 모달 시스템 */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .modal-card { background: #0f0f0f; border: 2px solid #deff9a; padding: 40px; border-radius: 30px; width: 800px; max-width: 95%; position: relative; }
+        .modal-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 2000; 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+        .modal-card { 
+            background: #0f0f0f; 
+            border: 2px solid #deff9a; 
+            padding: 40px; 
+            border-radius: 30px; 
+            width: 1000px; 
+            max-width: 95%; 
+            position: relative; 
+        }
         
-        .hash-block { background: #000; border: 1px solid #333; padding: 20px; border-radius: 15px; font-family: 'Courier New', Courier, monospace; font-size: 13px; margin-bottom: 15px; line-height: 1.6; word-break: break-all; }
-        .hash-block strong { color: #888; font-size: 11px; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .hash-block { 
+            background: #000; 
+            border: 1px solid #333; 
+            padding: 15px; 
+            border-radius: 15px; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 12px; 
+            margin-bottom: 12px; 
+            line-height: 1.5; 
+            word-break: break-all; 
+            text-align: left; 
+        }
+        .hash-block strong { color: #888; font-size: 10px; text-transform: uppercase; display: block; margin-bottom: 4px; }
         .hash-new { color: #deff9a; font-weight: 700; }
 
-        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #deff9a; box-shadow: 0 0 15px #deff9a; animation: scan 2s infinite linear; }
+        .scan-line { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 2px; 
+            background: #deff9a; 
+            box-shadow: 0 0 15px #deff9a; 
+            animation: scan 2s infinite linear; 
+        }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        .tele-item { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid #222; 
+            border-radius: 20px; 
+            padding: 15px; 
+            text-align: center; 
+            transition: 0.3s; 
+            cursor: pointer; 
+        }
+        .tele-item:hover { border-color: #deff9a; background: rgba(222,255,154,0.05); transform: translateY(-3px); }
+        .warning-active { border-color: #f59e0b !important; background: rgba(245, 158, 11, 0.1) !important; animation: pulse-warn 2s infinite; }
+        @keyframes pulse-warn { 0%, 100% { box-shadow: 0 0 5px #f59e0b22; } 50% { box-shadow: 0 0 15px #f59e0b44; } }
 
         .grid-square { transition: all 0.2s ease; cursor: pointer; border-radius: 1px; }
         .grid-square:hover { transform: scale(1.8); z-index: 50; outline: 1px solid white; box-shadow: 0 0 20px rgba(255,255,255,0.6); }
-        .active-v { background-color: #deff9a !important; }
-        .active-f { background-color: #3b82f6 !important; }
-        .active-x { background-color: #a855f7 !important; }
-        .matched-highlight { animation: pulse-white 1s infinite; transform: scale(2.0) !important; z-index: 100 !important; background-color: #fff !important; }
-        @keyframes pulse-white { 0%, 100% { box-shadow: 0 0 10px white; } 50% { box-shadow: 0 0 30px white; } }
+        .active-dot { background-color: #deff9a !important; }
+        .matched-highlight { animation: pulse-white 1s infinite; transform: scale(1.6) !important; z-index: 100 !important; background-color: #fff !important; }
+        @keyframes pulse-white { 0%, 100% { box-shadow: 0 0 10px white; } 50% { box-shadow: 0 0 20px white; } }
 
-        .setup-container { max-width: 800px; margin: 40px auto; text-align: center; }
-        .input-box { background: #111; border: 1px solid #333; padding: 18px; border-radius: 15px; width: 100%; max-width: 400px; margin: 10px auto; color: #fff; font-size: 18px; text-align: center; }
+        .input-box { background: #111; border: 1px solid #333; padding: 15px; border-radius: 15px; width: 100%; max-width: 350px; margin: 10px auto; color: #fff; font-size: 16px; text-align: center; font-weight: 700; }
+
+        .typing::after { content: '|'; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -63,165 +175,221 @@
 
     <script type="text/babel">
         const { useState, useEffect, useMemo, useRef } = React;
+        const apiKey = ""; // Gemini API Key
 
         const App = () => {
-            const [phase, setPhase] = useState('onboarding'); // onboarding, live, analysis
+            const [phase, setPhase] = useState('onboarding'); 
             const [step, setStep] = useState(1);
-            const [selectedVehicle, setSelectedVehicle] = useState('Bus');
             const [userData, setUserData] = useState({ name: '송문신', license: '11-02-123456-78', vLid: '' });
             const [opData, setOpData] = useState({ op: '', car: '', carID: '' });
             
-            const [prevHash, setPrevHash] = useState("ROOT_HASH_V1_86_INITIAL_ENTRY_POINT_SECURED");
-            const [hashModal, setHashModal] = useState({ show: false, title: '', payload: '', newHash: '', callback: null });
+            // 실시간 데이터
+            const [liveData, setLiveData] = useState({ speed: 60.0, bScore: 24.2, location: '상암동 MBC 사옥 정문', isWarning: false });
             
+            // 보안 체인
+            const [prevHash, setPrevHash] = useState("ROOT_BLOCK_HASH_V9_1_AUTO_TRANSITION_READY");
+            const [hashModal, setHashModal] = useState({ show: false, title: '', desc: '', payload: '', newHash: '', callback: null });
+            
+            // 배터리 상세
+            const [batteryModal, setBatteryModal] = useState(false);
+            const [batteryAiOpinion, setBatteryAiOpinion] = useState("");
+            const [isBatteryAiLoading, setIsBatteryAiLoading] = useState(false);
+            const cellChartRef = useRef(null);
+            const [cellChart, setCellChart] = useState(null);
+
+            // 판독 라이브러리
             const [builtIndices, setBuiltIndices] = useState(new Set());
             const [currentCaseIdx, setCurrentCaseIdx] = useState(-1);
             const [isSimulating, setIsSimulating] = useState(false);
+            const [accidentAiReport, setAccidentAiReport] = useState("");
+            const [isAccidentAiLoading, setIsAccidentAiLoading] = useState(false);
 
             const STANDARDS = { speed: 60.0, friction: 0.80, latency: 0.10 };
             const MARGINS = { speed: 1.5, friction: 0.05, latency: 0.03 };
 
-            // SHA-256 Mock function
+            // 초기화 함수
+            const resetApp = () => {
+                setPhase('onboarding');
+                setStep(1);
+                setUserData({ name: '송문신', license: '11-02-123456-78', vLid: '' });
+                setOpData({ op: '', car: '', carID: '' });
+                setCurrentCaseIdx(-1);
+                setAiAnalysis("");
+                setAccidentAiReport("");
+                setBatteryAiOpinion("");
+                setLiveData({ speed: 60.0, bScore: 24.2, location: '상암동 MBC 사옥 정문', isWarning: false });
+                setPrevHash("ROOT_BLOCK_HASH_V9_1_AUTO_TRANSITION_READY");
+            };
+
+            // 생체 인식 자동 종료 및 단계 전환 로직
+            useEffect(() => {
+                if (phase === 'onboarding' && step === 2) {
+                    const timer = setTimeout(() => {
+                        setStep(3);
+                    }, 2800); // 2.8초 후 자동 전환
+                    return () => clearTimeout(timer);
+                }
+            }, [phase, step]);
+
+            const callGemini = async (prompt, systemInstruction) => {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+                try {
+                    const response = await fetch(url, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: prompt }] }],
+                            systemInstruction: { parts: [{ text: systemInstruction }] }
+                        })
+                    });
+                    const result = await response.json();
+                    return result.candidates[0].content.parts[0].text;
+                } catch (e) {
+                    return "AI 분석 서버가 현재 응답할 수 없습니다. 데이터 무결성 로그를 확인하십시오.";
+                }
+            };
+
             const calculateHash = async (text) => {
                 const msgBuffer = new TextEncoder().encode(text);
                 const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
                 return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
             };
 
-            // --- 1. V-LID 발급 및 해시 암호화 시연 ---
-            const sealVLID = async () => {
-                const vLid = 'V-LID_' + btoa(encodeURIComponent(userData.name)).substring(0, 8).toUpperCase();
-                setUserData(prev => ({ ...prev, vLid }));
-                
-                const payload = `ISSUANCE:V-LID|HOLDER:${userData.name}|LIC:${userData.license}|TS:${Date.now()}`;
-                const newHash = await calculateHash(payload + prevHash);
+            useEffect(() => {
+                let timer;
+                if (phase === 'live') {
+                    timer = setInterval(() => {
+                        setLiveData(prev => {
+                            const cycleTime = Math.floor(Date.now() / 1000) % 15;
+                            const shouldWarn = cycleTime > 10;
+                            return {
+                                ...prev,
+                                speed: (59.5 + Math.random() * 2).toFixed(1),
+                                bScore: shouldWarn ? (55.4 + Math.random()).toFixed(1) : (22 + Math.random()).toFixed(1),
+                                isWarning: shouldWarn
+                            };
+                        });
+                    }, 1000);
+                }
+                return () => clearInterval(timer);
+            }, [phase]);
 
-                setHashModal({
-                    show: true,
-                    title: 'V-LID CRYPTOGRAPHIC ISSUANCE',
-                    desc: '발급된 디지털 면허를 해시체인에 등록하여 위변조를 차단합니다.',
-                    payload,
-                    newHash: '...ENCRYPTING...',
-                    callback: () => setStep(4)
-                });
+            useEffect(() => {
+                if (batteryModal && cellChartRef.current) {
+                    const ctx = cellChartRef.current.getContext('2d');
+                    const data = [3.79, 3.81, 3.82, 3.78, 3.8, 3.81, 3.51, 3.82, 3.79, 3.79, 3.80, 3.83];
+                    if (cellChart) cellChart.destroy();
+                    const newChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: Array.from({length: 12}, (_, i) => `C${i+1}`),
+                            datasets: [{ data, backgroundColor: data.map(v => v < 3.6 ? '#f59e0b' : '#deff9a'), borderRadius: 6 }]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: { y: { min: 3.0, max: 4.2, grid: { color: '#222' } }, x: { grid: { display: false } } },
+                            plugins: { legend: { display: false }, datalabels: { display: false } }
+                        }
+                    });
+                    setCellChart(newChart);
+                    handleBatteryAiAnalysis();
+                }
+            }, [batteryModal]);
 
-                setTimeout(() => {
-                    setHashModal(prev => ({ ...prev, newHash }));
-                    setPrevHash(newHash);
-                }, 1500);
+            const handleBatteryAiAnalysis = async () => {
+                setIsBatteryAiLoading(true);
+                const system = "당신은 배터리 안전 전문가입니다. 셀 전압 불균형 징후를 분석하여 조치사항을 2문장으로 답하세요.";
+                const prompt = "최고 온도 53.2도, 셀 편차 0.21V 감지됨. 7번 셀 이상 징후 분석 요망.";
+                const opinion = await callGemini(prompt, system);
+                setBatteryAiOpinion(opinion);
+                setIsBatteryAiLoading(false);
             };
 
-            // --- 2. 운행 세션 인가 및 해시 암호화 시연 ---
+            const handleAccidentAiAnalysis = async (data) => {
+                setIsAccidentAiLoading(true);
+                const system = "당신은 사고 분석 전문가입니다. 텔레메트리 데이터를 바탕으로 인과관계를 3문장 이내로 정리하세요.";
+                const prompt = `속도: ${data.actual.speed}km/h, 지연: ${data.actual.latency}s, 기여도: 시스템(${data.liabilities.oem}%). 원인을 분석해줘.`;
+                const report = await callGemini(prompt, system);
+                setAccidentAiReport(report);
+                setIsAccidentAiLoading(false);
+            };
+
+            const sealVLID = async () => {
+                const vLid = 'V-LID_' + btoa(encodeURIComponent(userData.name)).substring(0, 10).toUpperCase();
+                setUserData(prev => ({ ...prev, vLid }));
+                const payload = `IDENTITY_BIND|HOLDER:${userData.name}|TS:${Date.now()}`;
+                const newHash = await calculateHash(payload + prevHash);
+                setHashModal({ show: true, title: '디지털 면허(V-LID) 암호화 발급', desc: '신원 데이터를 해시체인 최초 블록에 성공적으로 봉인했습니다.', payload, newHash: '...BLOCK SEALING...', callback: () => setStep(4) });
+                setTimeout(() => { setHashModal(prev => ({ ...prev, newHash })); setPrevHash(newHash); }, 1200);
+            };
+
             const sealSession = async (car, id, op) => {
                 setOpData({ op, car, carID: id });
-                const payload = `SESSION_START|V-LID:${userData.vLid}|VEHICLE:${id}|OP:${op}|TS:${Date.now()}`;
+                const payload = `SESSION_START|VEHICLE:${id}|DRIVER:${userData.vLid}|TS:${Date.now()}`;
                 const newHash = await calculateHash(payload + prevHash);
-
-                setHashModal({
-                    show: true,
-                    title: 'DRIVING SESSION AUTHORIZED',
-                    desc: '선택하신 차량에 대한 운행 권한 세션을 정부 DB와 연동하여 인가합니다.',
-                    payload,
-                    newHash: '...AUTHORIZING SESSION...',
-                    callback: () => setPhase('live')
-                });
-
-                setTimeout(() => {
-                    setHashModal(prev => ({ ...prev, newHash }));
-                    setPrevHash(newHash);
-                }, 1500);
+                setHashModal({ show: true, title: '운행 세션 권한 인가 완료', desc: '차량 제어권 세션을 생성하고 무결성 체인에 실시간 연결했습니다.', payload, newHash: '...SESSION SEALING...', callback: () => setPhase('live') });
+                setTimeout(() => { setHashModal(prev => ({ ...prev, newHash })); setPrevHash(newHash); }, 1200);
             };
 
-            // --- 3. 사고 데이터 무결성 봉인 시연 ---
             const sealIncident = async (data) => {
-                const payload = `INCIDENT_REPORT|HOLDER:${userData.name}|VEHICLE:${opData.carID}|TS:${Date.now()}`;
+                const payload = `FORENSIC_SEAL|CASEID:${data.id}|CONTRIB:${data.liabilities.oem}%|TS:${Date.now()}`;
                 const newHash = await calculateHash(payload + prevHash);
-
-                setHashModal({
-                    show: true,
-                    title: 'ACCIDENT DATA SEALED',
-                    desc: '최종 사고 판독 데이터를 해시체인에 연결하여 법적 증거력을 확보합니다.',
-                    payload,
-                    newHash: '...SEALING EVIDENCE...',
-                    callback: () => {} 
-                });
-
-                setTimeout(() => {
-                    setHashModal(prev => ({ ...prev, newHash }));
-                    setPrevHash(newHash);
-                }, 1500);
+                setHashModal({ show: true, title: '사고 판독 데이터 최종 봉인', desc: '인과 판독 리포트를 수정 불가능한 법적 증거 블록으로 박제했습니다.', payload, newHash: '...EVIDENCE SEALING...', callback: null });
+                setTimeout(() => { setHashModal(prev => ({ ...prev, newHash })); setPrevHash(newHash); handleAccidentAiAnalysis(data); }, 1200);
             };
 
-            // --- 데이터 엔진 (1,000 Edge Cases) ---
             const libraryData = useMemo(() => {
                 return Array.from({ length: 1000 }, (_, i) => {
-                    let s = STANDARDS.speed, f = STANDARDS.friction, l = STANDARDS.latency;
+                    let s = 60.5, f = 0.8, l = 0.45;
                     const dice = i % 3;
-                    if (dice === 0) { l = 0.42 + Math.random() * 0.1; s = 60.5; } // 지연 결함
-                    else if (dice === 1) { s = 95 + Math.random() * 20; } // 속도 과실
-                    else { f = 0.25 + Math.random() * 0.1; s = 60.5; } // 노면 결함
-
+                    if (dice === 1) { s = 95.2; l = 0.1; } else if (dice === 2) { f = 0.25; s = 60.2; }
                     const isNormS = s <= STANDARDS.speed + MARGINS.speed;
                     const isNormF = f >= STANDARDS.friction - MARGINS.friction;
                     const isNormL = l <= STANDARDS.latency + MARGINS.latency;
-
                     let op, env, oem;
-                    if (isNormS && isNormF && isNormL) {
-                        op = 33; env = 33; oem = 34;
-                    } else {
-                        let fixed = 0;
-                        if (isNormS) { op = 3; fixed += 3; }
-                        if (isNormF) { env = 3; fixed += 3; }
-                        if (isNormL) { oem = 3; fixed += 3; }
-                        
-                        const remain = 100 - fixed;
-                        const sD = !isNormS ? Math.pow(s - STANDARDS.speed, 2) : 0;
-                        const fD = !isNormF ? Math.pow(STANDARDS.friction - f, 2) * 1000 : 0;
-                        const lD = !isNormL ? Math.pow(l - STANDARDS.latency, 2) * 2000 : 0;
+                    if (isNormS && isNormF && isNormL) { op = 33; env = 33; oem = 34; }
+                    else {
+                        const sD = !isNormS ? Math.pow(s - STANDARDS.speed, 2.5) : 0;
+                        const fD = !isNormF ? Math.pow(STANDARDS.friction - f, 2.5) * 1500 : 0;
+                        const lD = !isNormL ? Math.pow(l - STANDARDS.latency, 2.5) * 5500 : 0;
                         const sum = sD + fD + lD || 1;
-
-                        if (!isNormS) op = Math.round((sD/sum)*remain);
-                        if (!isNormF) env = Math.round((fD/sum)*remain);
-                        if (!isNormL) oem = Math.round((lD/sum)*remain);
+                        const pool = 100 - ((isNormS?3:0)+(isNormF?3:0)+(isNormL?3:0));
+                        op = !isNormS ? Math.round((sD/sum)*pool) : 3;
+                        env = !isNormF ? Math.round((fD/sum)*pool) : 3;
+                        oem = !isNormL ? Math.round((lD/sum)*pool) : 3;
                     }
-                    return { id: i + 1, actual: { speed: s, friction: f, latency: l }, liabilities: { op, env, oem } };
+                    const total = (op||0)+(env||0)+(oem||0);
+                    const diff = 100 - total;
+                    if (op >= env && op >= oem) op += diff; else if (env >= op && env >= oem) env += diff; else oem += diff;
+                    return { id: i+1, actual: { speed: s, friction: f, latency: l }, liabilities: { op, env, oem } };
                 });
-            }, [selectedVehicle]);
-
-            const runSim = () => {
-                if (builtIndices.size === 0) return;
-                setIsSimulating(true); setCurrentCaseIdx(-1);
-                setTimeout(() => {
-                    const builtArr = Array.from(builtIndices);
-                    const match = builtArr[Math.floor(Math.random() * builtArr.length)];
-                    setCurrentCaseIdx(match);
-                    setIsSimulating(false);
-                    sealIncident(libraryData[match]);
-                }, 2000);
-            };
+            }, []);
 
             return (
-                <div className="p-8 max-w-[1400px] mx-auto min-h-screen flex flex-col">
+                <div className="app-wrapper">
                     <header className="flex justify-between items-end border-b border-white/10 pb-6 mb-8">
-                        <div>
+                        <div className="text-left">
                             <div className="flex items-center gap-3 mb-1">
-                                <span className="bg-[#deff9a] text-black text-[10px] font-black px-2 py-0.5 rounded uppercase font-bold tracking-tighter">Chain-of-Trust</span>
+                                <span className="ai-badge">AI SECURE v9.1</span>
                                 <h1 className="text-3xl font-black text-white italic tracking-tighter uppercase">Motion Agent-V</h1>
                             </div>
-                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest italic">Autonomous Causal Audit & Verification Infrastructure</p>
+                            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">통합 보안 관제 및 AI 사고 판독 인프라</p>
                         </div>
-                        <div className="text-right">
-                            <span className="text-[10px] text-slate-500 font-bold block mb-1 uppercase tracking-tighter">Chain Status</span>
-                            <span className="text-[#deff9a] text-sm font-black tracking-widest uppercase">SHA-256 Integrated</span>
+                        <div className="flex gap-4">
+                            {phase === 'analysis' && <button onClick={resetApp} className="btn-reset">초기 화면으로 <i className="fa-solid fa-home"></i></button>}
+                            <div className="text-right">
+                                <span className="text-[10px] text-slate-500 font-bold block mb-1 uppercase text-right">System Chain</span>
+                                <span className="text-[#deff9a] text-sm font-black tracking-widest font-mono">SHA-256 ACTIVE</span>
+                            </div>
                         </div>
                     </header>
 
                     {phase === 'onboarding' && (
-                        <div className="setup-container">
+                        <div className="max-w-4xl mx-auto w-full flex-grow animate-in fade-in duration-500">
                             {step === 1 && (
-                                <div className="card animate-in fade-in zoom-in duration-500">
+                                <div className="card text-center text-left">
                                     <h1 className="text-4xl font-black mb-4">아날로그 면허 <span>디지털 등록</span></h1>
-                                    <p className="text-slate-400 mb-8 font-medium">본인 확인을 위한 면허 정보를 입력하십시오.</p>
+                                    <p className="text-slate-400 mb-8">실시간 운행 세션 생성을 위한 면허 정보를 입력하십시오.</p>
                                     <div className="flex flex-col gap-4 items-center">
                                         <input type="text" className="input-box" value={userData.name} onChange={e=>setUserData({...userData, name:e.target.value})} placeholder="성명" />
                                         <input type="text" className="input-box" value={userData.license} onChange={e=>setUserData({...userData, license:e.target.value})} placeholder="면허번호" />
@@ -230,50 +398,50 @@
                                 </div>
                             )}
                             {step === 2 && (
-                                <div className="card text-center animate-in slide-in-from-bottom-10">
+                                <div className="card text-center max-w-lg mx-auto">
                                     <h1 className="text-3xl font-black mb-8">면허권자 <span>안면 인식</span></h1>
-                                    <div className="w-48 h-48 border-4 border-[#deff9a] rounded-full mx-auto relative overflow-hidden mb-8">
+                                    <div className="w-48 h-48 border-4 border-[#deff9a] rounded-full mx-auto relative overflow-hidden mb-8 shadow-[0_0_30px_#deff9a22]">
                                         <i className="fa-solid fa-user-large text-8xl text-slate-800 mt-10"></i>
                                         <div className="scan-line"></div>
                                     </div>
-                                    <p className="text-[#deff9a] font-bold animate-pulse">본인 여부를 대조하고 있습니다...</p>
-                                    <button className="btn-primary mt-10" onClick={() => setStep(3)}>검증 완료</button>
+                                    <p className="text-[#deff9a] font-bold animate-pulse">생체 정보를 분석하고 있습니다...</p>
+                                    <p className="text-[11px] text-slate-500 mt-4 italic">분석 완료 시 자동으로 다음 단계로 이동합니다.</p>
                                 </div>
                             )}
                             {step === 3 && (
-                                <div className="card text-center">
-                                    <h1 className="text-3xl font-black mb-8">데이터 <span>무결성 검증</span></h1>
-                                    <div className="py-12 flex flex-col items-center gap-6">
-                                        <i className="fa-solid fa-shield-halved text-6xl text-[#deff9a]"></i>
-                                        <p className="text-slate-300 font-bold">경찰청 공공 DB 대조 결과: [정상]</p>
-                                        <button className="btn-primary" onClick={sealVLID}>디지털 V-LID 발급 (Hash Seal)</button>
+                                <div className="card text-center max-w-lg mx-auto">
+                                    <h1 className="text-3xl font-black mb-8 text-left">데이터 <span>무결성 검증</span></h1>
+                                    <div className="py-12 flex flex-col items-center gap-8">
+                                        <div className="p-8 bg-[#deff9a]/5 border border-[#deff9a]/20 rounded-full"><i className="fa-solid fa-shield-halved text-6xl text-[#deff9a]"></i></div>
+                                        <p className="text-slate-300 font-bold text-xl text-center">공공 DB 대조 결과: [신원 일치]</p>
+                                        <button className="btn-primary" onClick={sealVLID}>디지털 V-LID 발급 및 체인 봉인 <i className="fa-solid fa-lock"></i></button>
                                     </div>
                                 </div>
                             )}
                             {step === 4 && (
-                                <div className="card text-center">
-                                    <h1 className="text-3xl font-black mb-8">디지털 ID <span>발급 완료</span></h1>
-                                    <div className="bg-black/50 border-2 border-[#deff9a] p-8 rounded-3xl mb-8 text-left">
-                                        <h3 className="text-3xl font-black text-white mb-2">{userData.name}</h3>
-                                        <code className="text-[#deff9a] font-mono">{userData.vLid}</code>
-                                        <p className="text-slate-500 text-[10px] mt-4 font-bold uppercase tracking-widest italic">Identity Sealing Completed on Hashchain</p>
+                                <div className="card text-center max-w-2xl mx-auto">
+                                    <h1 className="text-3xl font-black mb-8">디지털 ID <span>발급 성공</span></h1>
+                                    <div className="bg-black/80 border-2 border-[#deff9a] p-10 rounded-[35px] mb-10 text-left">
+                                        <span className="text-[11px] text-slate-500 font-black uppercase tracking-widest block mb-4 text-left">Encrypted License Block</span>
+                                        <h3 className="text-4xl font-black text-white mb-3 text-left">{userData.name}</h3>
+                                        <code className="text-[#deff9a] font-mono text-xl text-left">{userData.vLid}</code>
                                     </div>
-                                    <button className="btn-primary" onClick={() => setStep(5)}>운영사 및 차량 선택 <i className="fa-solid fa-link"></i></button>
+                                    <button className="btn-primary" onClick={() => setStep(5)}>운용 자산 매칭 및 세션 개시 <i className="fa-solid fa-link"></i></button>
                                 </div>
                             )}
                             {step === 5 && (
-                                <div className="grid grid-cols-2 gap-6 text-left">
-                                    <div className="card">
-                                        <h2 className="text-[#deff9a] font-black mb-6 uppercase text-[12px]">Operator Selection</h2>
-                                        <div className="flex flex-col gap-4">
-                                            <div className="p-6 bg-black border border-white/5 rounded-2xl cursor-pointer hover:border-[#deff9a]" onClick={() => sealSession('Tesla Model 3', 'TS-K-101', '카카오 모빌리티')}>
-                                                <h4 className="font-bold">카카오 모빌리티</h4>
-                                                <span className="text-[10px] text-slate-500 font-bold uppercase">Tesla Model 3 | TS-K-101</span>
-                                            </div>
-                                            <div className="p-6 bg-black border border-white/5 rounded-2xl cursor-pointer hover:border-[#3b82f6]" onClick={() => sealSession('Waymo Zephyr', 'WY-U-505', '우버 오토노머스')}>
-                                                <h4 className="font-bold">우버 오토노머스</h4>
-                                                <span className="text-[10px] text-slate-500 font-bold uppercase">Waymo Zephyr | WY-U-505</span>
-                                            </div>
+                                <div className="max-w-5xl mx-auto w-full">
+                                    <h1 className="text-4xl font-black mb-10 text-center uppercase tracking-tighter">운행 인가 <span>자산 선택</span></h1>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                                        <div className="card group hover:border-[#deff9a] transition-all cursor-pointer" onClick={() => sealSession('Tesla Model 3', 'TS-K-101', '카카오 모빌리티')}>
+                                            <h2 className="text-[#deff9a] font-black uppercase text-[12px] mb-6 tracking-widest text-left">Kakao Mobility Autonomous</h2>
+                                            <h4 className="font-black text-3xl mb-2 text-white text-left">Tesla Model 3</h4>
+                                            <span className="text-[11px] text-slate-500 font-bold uppercase font-mono text-left">HW-ID: TS-K-101</span>
+                                        </div>
+                                        <div className="card group hover:border-[#3b82f6] transition-all cursor-pointer" onClick={() => sealSession('Ioniq 6', 'HY-K-202', '카카오 모빌리티')}>
+                                            <h2 className="text-[#3b82f6] font-black uppercase text-[12px] mb-6 tracking-widest text-left">Kakao Mobility Fleet</h2>
+                                            <h4 className="font-black text-3xl mb-2 text-white text-left">Hyundai Ioniq 6</h4>
+                                            <span className="text-[11px] text-slate-500 font-bold uppercase font-mono text-left">HW-ID: HY-K-202</span>
                                         </div>
                                     </div>
                                 </div>
@@ -282,91 +450,111 @@
                     )}
 
                     {phase === 'live' && (
-                        <div className="grid grid-cols-[1fr_450px] gap-8 flex-grow">
-                            <div className="card flex flex-col justify-center items-center text-center bg-gradient-to-b from-[#111] to-black">
-                                <i className="fa-solid fa-location-crosshairs text-6xl text-[#deff9a] opacity-20 mb-8"></i>
-                                <span className="text-red-500 font-black text-xs tracking-[4px] uppercase mb-4 animate-pulse"><i className="fa-solid fa-satellite"></i> GPS Active</span>
-                                <h1 className="text-5xl font-black italic tracking-tighter">상암동 MBC 사옥 정문</h1>
-                                <div className="mt-12 bg-[#deff9a]/5 border border-[#deff9a]/20 px-8 py-4 rounded-full">
-                                    <span className="text-[#deff9a] text-xs font-black tracking-widest uppercase italic"><i className="fa-solid fa-tower-broadcast"></i> Infrastructure Linked: V2X Protocol Enabled</span>
+                        <div className="grid grid-cols-1 lg:grid-cols-[1fr_480px] gap-8 flex-grow text-left animate-in fade-in duration-700">
+                            <div className="card flex flex-col justify-center items-center text-center bg-gradient-to-b from-[#111] to-black relative overflow-hidden">
+                                <div className="absolute top-10 left-10 flex items-center gap-3">
+                                    <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></div>
+                                    <span className="text-emerald-400 font-black text-[11px] uppercase tracking-widest">인프라 스트리밍 활성</span>
                                 </div>
+                                <i className="fa-solid fa-location-dot text-6xl text-[#deff9a] opacity-20 mb-8"></i>
+                                <span className="text-red-500 font-black text-xs tracking-[5px] uppercase mb-4 animate-pulse"><i className="fa-solid fa-satellite"></i> GPS Real-time Position</span>
+                                <h1 className="text-6xl font-black italic tracking-tighter text-white uppercase">{liveData.location}</h1>
+                                
+                                {liveData.isWarning && (
+                                    <div className="mt-12 bg-amber-500/10 border border-amber-500/30 px-10 py-5 rounded-[25px] flex items-center gap-5 animate-bounce">
+                                        <i className="fa-solid fa-triangle-exclamation text-amber-500 text-3xl"></i>
+                                        <div className="text-left text-left">
+                                            <span className="text-amber-500 font-black text-sm uppercase tracking-tighter block text-left">배터리 이상 포착</span>
+                                            <p className="text-xs text-slate-400 font-medium italic text-left text-left">AI 정밀 분석 모드가 활성화되었습니다. 수치를 확인하십시오.</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                            <div className="flex flex-col gap-6">
-                                <div className="card">
-                                    <h2 className="text-[#deff9a] font-black mb-6 uppercase text-[11px]"><i className="fa-solid fa-microchip"></i> Monitoring</h2>
-                                    <div className="bg-black/50 p-6 rounded-2xl border border-white/5 mb-6">
-                                        <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">인증 면허권자</span>
-                                        <h3 className="text-2xl font-black text-white">{userData.name}</h3>
-                                        <div className="mt-4 pt-4 border-t border-white/5">
-                                            <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">운용 자산 모델</span>
-                                            <p className="text-sm font-bold text-slate-300">{opData.car} ({opData.carID})</p>
+
+                            <div className="flex flex-col gap-6 text-left">
+                                <div className="card text-left text-left">
+                                    <h2 className="text-[#deff9a] font-black mb-8 uppercase text-[11px] flex items-center gap-3 text-left"><i className="fa-solid fa-microchip"></i> 텔레메트리 관제</h2>
+                                    <div className="bg-black/60 p-6 rounded-3xl border border-white/5 mb-8 text-left text-left">
+                                        <span className="text-[10px] text-slate-500 font-black uppercase block mb-1 text-left text-left">인증된 면허권자</span>
+                                        <h3 className="text-2xl font-black text-white underline decoration-[#deff9a] decoration-4 underline-offset-8 text-left">{userData.name}</h3>
+                                        <div className="pt-4 mt-4 border-t border-white/5 text-left">
+                                            <span className="text-[10px] text-slate-500 font-black uppercase block mb-1 text-left text-left text-left">운용 자산</span>
+                                            <p className="text-base font-bold text-slate-300 italic text-left text-left">{opData.car} ({opData.carID})</p>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div className="bg-white/5 p-4 rounded-xl text-center border border-white/5">
-                                            <span className="text-[10px] text-slate-500 font-bold uppercase block">속도</span>
-                                            <span className="text-2xl font-black text-white">60.5</span><small className="text-[10px] ml-1">km/h</small>
+                                    <div className="grid grid-cols-2 gap-4 text-left">
+                                        <div className="tele-item text-left">
+                                            <span className="text-[10px] text-slate-500 font-black uppercase block mb-2">실시간 속도</span>
+                                            <span className="text-4xl font-black text-white">{liveData.speed}</span><small className="text-xs ml-1 text-slate-500">km/h</small>
                                         </div>
-                                        <div className="bg-white/5 p-4 rounded-xl text-center border border-white/5">
-                                            <span className="text-[10px] text-slate-500 font-bold uppercase block">지연</span>
-                                            <span className="text-2xl font-black text-white">0.42</span><small className="text-[10px] ml-1">s</small>
+                                        <div className={`tele-item ${liveData.isWarning ? 'warning-active' : ''}`} onClick={() => setBatteryModal(true)}>
+                                            <span className={`text-[10px] font-black uppercase block mb-2 ${liveData.isWarning ? 'text-amber-500' : 'text-slate-500'}`}>배터리 안전 (B)</span>
+                                            <div className="flex items-baseline justify-center">
+                                                <span className={`text-4xl font-black ${liveData.isWarning ? 'text-amber-500' : 'text-[#3b82f6]'}`}>{liveData.bScore}</span>
+                                            </div>
+                                            <span className="text-[9px] text-slate-600 block mt-2 uppercase font-bold tracking-tighter">정밀 진단 클릭</span>
                                         </div>
                                     </div>
-                                    <button className="btn-primary w-full mt-6 h-16" onClick={() => { setPhase('analysis'); setBuiltIndices(new Set([0,1,2,3,4,5])); }}>사고 인과 판독 시작 <i className="fa-solid fa-magnifying-glass-chart"></i></button>
+                                    <button className="btn-primary w-full mt-10 h-16 text-lg shadow-xl" onClick={() => setPhase('analysis')}>사고 인과관계 판독 진입 <i className="fa-solid fa-magnifying-glass-chart"></i></button>
                                 </div>
                             </div>
                         </div>
                     )}
 
                     {phase === 'analysis' && (
-                        <div className="grid grid-cols-[450px_1fr] gap-10 flex-grow">
+                        <div className="grid grid-cols-1 lg:grid-cols-[450px_1fr] gap-8 flex-grow text-left animate-in fade-in duration-700">
                             <aside className="card text-left">
-                                <h2 className="text-[#deff9a] font-black mb-8 uppercase text-[11px]"><i className="fa-solid fa-database"></i> Edge Case Library</h2>
-                                <div className="grid grid-cols-10 gap-1.5 h-[400px] overflow-y-auto pr-4 custom-scrollbar mb-8">
+                                <h2 className="text-[#deff9a] font-black mb-8 uppercase text-[11px] flex items-center gap-3 text-left"><i className="fa-solid fa-database"></i> 1,000건 엣지 라이브러리</h2>
+                                <div className="grid grid-cols-10 gap-2 h-[450px] overflow-y-auto pr-4 custom-scrollbar mb-10 bg-black/40 p-4 rounded-2xl border border-white/5">
                                     {libraryData.slice(0, 400).map((item, i) => (
-                                        <div key={i} className={`grid-square aspect-square ${builtIndices.has(i) ? 'active-v' : 'bg-white/5'} ${currentCaseIdx === i ? 'matched-highlight' : ''}`} />
+                                        <div key={i} className={`grid-square aspect-square ${currentCaseIdx === i ? 'matched-highlight' : 'bg-white/5 active-dot'}`} onClick={() => setCurrentCaseIdx(i)} />
                                     ))}
                                 </div>
-                                <button className="btn-primary w-full h-16" onClick={runSim} disabled={isSimulating}>실제 사고 시뮬레이션 시작 <i className="fa-solid fa-car-burst"></i></button>
+                                <button className="btn-primary w-full h-16 text-lg" onClick={() => { setIsSimulating(true); setTimeout(() => { setCurrentCaseIdx(0); setIsSimulating(false); sealIncident(libraryData[0]); }, 2000); }} disabled={isSimulating}>
+                                    {isSimulating ? "데이터 분석 중..." : "실제 사고 시뮬레이션"} <i className="fa-solid fa-car-burst"></i>
+                                </button>
                             </aside>
                             
-                            <div className="card text-left flex flex-col justify-center">
+                            <div className="card text-left flex flex-col justify-center min-h-[600px] border-[#3b82f6]/20 text-left">
                                 {currentCaseIdx === -1 ? (
-                                    <div className="text-center opacity-30">
-                                        <i className="fa-solid fa-magnifying-glass-chart text-7xl mb-6"></i>
-                                        <h2 className="text-3xl font-black">판독 대기 중...</h2>
-                                    </div>
+                                    <div className="text-center py-20 opacity-20"><i className="fa-solid fa-fingerprint text-9xl mb-8"></i><h2 className="text-4xl font-black uppercase tracking-tighter text-center">Engine Standby</h2></div>
                                 ) : (
-                                    <div className="animate-in fade-in slide-in-from-bottom-10">
-                                        <div className="flex items-center gap-4 mb-8">
-                                            <span className="bg-blue-600 px-4 py-1 rounded-full text-[10px] font-black uppercase">정밀 판독 성공</span>
-                                            <h2 className="text-3xl font-black uppercase">Case #{String(libraryData[currentCaseIdx].id).padStart(4, '0')} : {libraryData[currentCaseIdx].liabilities.oem > 50 ? "시스템 지연 결함" : "규정 속도 준수 내 불가항력"}</h2>
+                                    <div className="animate-in fade-in slide-in-from-bottom-10 duration-700 text-left">
+                                        <div className="flex items-center justify-between mb-10 border-b border-white/5 pb-8 text-left">
+                                            <div className="flex items-center gap-6 text-left">
+                                                <span className="bg-blue-600 px-6 py-2 rounded-full text-[11px] font-black uppercase text-left">Forensic Analysis Success</span>
+                                                <h2 className="text-3xl font-black uppercase tracking-tighter text-white text-left text-left text-left">사례 #{String(libraryData[currentCaseIdx].id).padStart(4, '0')} : <span className="text-[#deff9a]">{libraryData[currentCaseIdx].liabilities.oem > 50 ? "시스템 지연 결함" : "불가항력적 사고"}</span></h2>
+                                            </div>
                                         </div>
                                         
-                                        <table className="w-full text-left border-collapse mb-10">
-                                            <thead>
-                                                <tr className="bg-white/5 text-[10px] font-black text-slate-500 uppercase">
-                                                    <th className="p-4">Parameter</th>
-                                                    <th className="p-4 text-center">Value</th>
-                                                    <th className="p-4 text-right">Contribution</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr className="border-t border-white/5">
-                                                    <td className="p-4 font-bold text-slate-300">주행 속도</td>
-                                                    <td className="p-4 text-center font-black">{libraryData[currentCaseIdx].actual.speed.toFixed(1)} km/h</td>
-                                                    <td className="p-4 text-right text-[#deff9a] font-black text-2xl">{libraryData[currentCaseIdx].liabilities.op}%</td>
-                                                </tr>
-                                                <tr className="border-t border-white/5">
-                                                    <td className="p-4 font-bold text-slate-300">인지 지연</td>
-                                                    <td className="p-4 text-center font-black">{libraryData[currentCaseIdx].actual.latency.toFixed(2)} s</td>
-                                                    <td className="p-4 text-right text-[#deff9a] font-black text-2xl">{libraryData[currentCaseIdx].liabilities.oem}%</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        
-                                        <div className="bg-white/5 p-8 rounded-3xl border border-white/10 italic text-xl leading-relaxed">
-                                            "본 사례는 속도가 60.5km/h로 정상 범위 내에 있었으나, 시스템 지연 시간이 0.42s로 표준을 수배 초과함에 따라 발생한 <strong>제조사 알고리즘 결함</strong>으로 판독되었습니다."
+                                        <div className="grid grid-cols-3 gap-6 mb-10 text-center">
+                                            <div className="bg-white/5 p-6 rounded-2xl">
+                                                <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">속도</span>
+                                                <span className="text-2xl font-black text-white">{libraryData[currentCaseIdx].actual.speed.toFixed(1)} <small className="text-xs">km/h</small></span>
+                                                <p className="text-[11px] text-slate-400 mt-2">기여도: {libraryData[currentCaseIdx].liabilities.op}%</p>
+                                            </div>
+                                            <div className="bg-white/5 p-6 rounded-2xl border border-[#deff9a]/20">
+                                                <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">지연</span>
+                                                <span className="text-2xl font-black text-[#deff9a]">{libraryData[currentCaseIdx].actual.latency.toFixed(2)} <small className="text-xs">s</small></span>
+                                                <p className="text-[11px] text-[#deff9a] mt-2">기여도: {libraryData[currentCaseIdx].liabilities.oem}%</p>
+                                            </div>
+                                            <div className="bg-white/5 p-6 rounded-2xl">
+                                                <span className="text-[10px] text-slate-500 font-bold uppercase block mb-1">노면</span>
+                                                <span className="text-2xl font-black text-white">{libraryData[currentCaseIdx].actual.friction.toFixed(2)} <small className="text-xs">μ</small></span>
+                                                <p className="text-[11px] text-slate-400 mt-2">기여도: {libraryData[currentCaseIdx].liabilities.env}%</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-8 text-left text-left">
+                                            <div className="bg-white/5 p-10 rounded-[40px] border border-white/10 italic text-2xl leading-relaxed text-slate-200 shadow-inner text-left text-left">
+                                                "속도는 <strong>60.5km/h</strong>로 정상 범위이나, <strong>인지 지연 0.45s</strong>가 표준을 4.5배 초과하여 발생한 [제조사 알고리즘 결함]으로 판독되었습니다."
+                                            </div>
+                                            <div className="bg-[#deff9a]/5 border border-[#deff9a]/20 p-8 rounded-[30px] flex flex-col justify-center text-left text-left text-left">
+                                                <span className="ai-badge mb-4 w-fit">✨ AI 전문 분석 리포트</span>
+                                                <p className="text-sm leading-relaxed text-[#deff9a] font-medium italic typing text-left">
+                                                    {isAccidentAiLoading ? "AI 전문가가 사고 인과관계를 정교하게 분석 중입니다..." : accidentAiReport}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -374,37 +562,60 @@
                         </div>
                     )}
 
-                    {/* HASH SEALING MODAL (The Heart of Demonstration) */}
+                    {/* 해시 체인 모달 */}
                     {hashModal.show && (
                         <div className="modal-overlay" style={{display: 'flex'}}>
-                            <div className="modal-card animate-in zoom-in duration-300">
-                                <h2 className="text-2xl font-black mb-6 uppercase flex items-center gap-3">
-                                    <i className="fa-solid fa-lock text-[#deff9a]"></i> {hashModal.title}
-                                </h2>
-                                <p className="text-slate-400 text-sm mb-6 font-medium">{hashModal.desc}</p>
+                            <div className="modal-card animate-in zoom-in duration-300 text-left">
+                                <h2 className="text-3xl font-black mb-8 uppercase flex items-center gap-4 text-left"><i className="fa-solid fa-lock text-[#deff9a] text-4xl"></i> {hashModal.title}</h2>
+                                <p className="text-slate-400 text-lg mb-8 font-medium text-left">{hashModal.desc}</p>
+                                <div className="hash-block text-left"><strong>[부모 해시 인덱스]</strong><span className="font-mono opacity-50 text-left">{prevHash}</span></div>
+                                <div className="hash-block text-left text-left"><strong>[트랜잭션 데이터 페이로드]</strong><span className="font-mono text-slate-200 text-left">{hashModal.payload}</span></div>
+                                <div className="hash-block text-left" style={{borderColor: '#deff9a', background: 'rgba(222,255,154,0.04)', padding: '25px'}}><strong className="text-[#deff9a] text-left">[생성된 신규 체인 블록]</strong><span className={hashModal.newHash.includes('.') ? 'animate-pulse text-slate-500' : 'hash-new font-mono text-2xl'}>{hashModal.newHash}</span></div>
+                                <button className="btn-primary w-full mt-10 h-20 text-xl" disabled={hashModal.newHash.includes('.')} onClick={() => { setHashModal({ ...hashModal, show: false }); hashModal.callback && hashModal.callback(); }}>데이터 무결성 확인 및 인가 승인 <i className="fa-solid fa-chevron-right ml-2"></i></button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 배터리 정밀 분석 모달 */}
+                    {batteryModal && (
+                        <div className="modal-overlay" style={{display: 'flex'}}>
+                            <div className="modal-card animate-in zoom-in duration-300 text-left">
+                                <div className="flex justify-between items-start mb-8 text-left text-left">
+                                    <div className="text-left text-left">
+                                        <h2 className="text-3xl font-black text-amber-500 uppercase flex items-center gap-4 text-left text-left"><i className="fa-solid fa-battery-bolt"></i> 배터리 정밀 분석 리포트</h2>
+                                        <p className="text-slate-400 text-sm mt-2 font-medium text-left text-left text-left">실시간 CAN-bus 데이터 기반 셀 단위 정밀 상태 진단 결과</p>
+                                    </div>
+                                    <button onClick={() => setBatteryModal(false)} className="text-slate-500 hover:text-white text-4xl">&times;</button>
+                                </div>
                                 
-                                <div className="hash-block">
-                                    <strong>[Parent Hash Index]</strong>
-                                    {prevHash}
+                                <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-stretch text-left">
+                                    <div className="bg-black/60 p-8 rounded-3xl border border-white/5 flex flex-col text-left text-left text-left">
+                                        <div className="flex justify-between items-center mb-6 text-left text-left">
+                                            <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest text-left text-left text-left text-left text-left">셀별 실시간 전압 분포 (Cell Balancing)</h4>
+                                            <span className="text-emerald-400 text-[10px] font-bold text-left text-left text-left">평균 전압: 3.78V</span>
+                                        </div>
+                                        <div className="h-[300px] w-full flex-grow text-left text-left text-left text-left text-left"><canvas ref={cellChartRef}></canvas></div>
+                                        <div className="mt-8 p-6 bg-[#deff9a]/5 border border-[#deff9a]/20 rounded-2xl text-left text-left">
+                                            <span className="ai-badge mb-2 w-fit text-left text-left">✨ AI 정비 전문가 소견</span>
+                                            <p className="text-sm text-[#deff9a] italic leading-relaxed typing text-left text-left text-left">
+                                                {isBatteryAiLoading ? "AI가 배터리 상태를 분석 중입니다..." : batteryAiOpinion}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-6 text-left">
+                                        <div className="p-8 bg-amber-500/5 border border-amber-500/20 rounded-3xl flex-grow flex flex-col justify-center text-left text-left text-left text-left text-left">
+                                            <span className="text-[10px] text-amber-500 font-black uppercase block mb-6 tracking-tighter text-left text-left">실측 정밀 진단 수치</span>
+                                            <ul className="space-y-5 text-sm text-slate-300 font-medium text-left text-left">
+                                                <li className="flex justify-between border-b border-white/5 pb-2 text-left"><span>최고 온도:</span> <span className="text-red-500 font-black">53.2 °C</span></li>
+                                                <li className="flex justify-between border-b border-white/5 pb-2 text-left text-left"><span>최저 온도:</span> <span className="text-slate-400 font-bold">34.8 °C</span></li>
+                                                <li className="flex justify-between border-b border-white/5 pb-2 text-left text-left"><span>내부 저항:</span> <span className="text-white font-bold">14.5 mΩ</span></li>
+                                                <li className="flex justify-between border-b border-white/5 pb-2 text-left text-left"><span>셀 편차(dV):</span> <span className="text-amber-500 font-black">0.21 V</span></li>
+                                                <li className="flex justify-between border-b border-white/5 pb-2 text-left text-left"><span>총 전압:</span> <span className="text-white font-bold">382.4 V</span></li>
+                                            </ul>
+                                        </div>
+                                        <button className="btn-primary w-full h-16 bg-amber-500 text-black hover:bg-amber-400 shadow-lg shadow-amber-900/20" onClick={() => setBatteryModal(false)}>긴급 정비 요청 발송</button>
+                                    </div>
                                 </div>
-                                <div className="hash-block">
-                                    <strong>[Current Transaction Payload]</strong>
-                                    {hashModal.payload}
-                                </div>
-                                <div className="hash-block" style={{borderColor: '#deff9a', background: 'rgba(222,255,154,0.02)'}}>
-                                    <strong>[Generated Chain Hash]</strong>
-                                    <span className={hashModal.newHash.includes('.') ? 'animate-pulse' : 'hash-new'}>
-                                        {hashModal.newHash}
-                                    </span>
-                                </div>
-                                
-                                <button 
-                                    className="btn-primary w-full mt-6" 
-                                    disabled={hashModal.newHash.includes('.')}
-                                    onClick={() => { setHashModal({ ...hashModal, show: false }); hashModal.callback && hashModal.callback(); }}
-                                >
-                                    무결성 확인 및 다음 단계로 <i className="fa-solid fa-chevron-right"></i>
-                                </button>
                             </div>
                         </div>
                     )}
@@ -412,7 +623,8 @@
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
         root.render(<App />);
     </script>
 </body>
